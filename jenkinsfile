@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh 'docker build -t mq-image .'
+                    sh 'docker build -t mft-image .'
+                    sh 'docker build -t ace-image .'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh 'kubectl apply -f mq-deployment.yaml'
+                    sh 'kubectl apply -f mft-deployment.yaml'
+                    sh 'kubectl apply -f ace-deployment.yaml'
+                }
+            }
+        }
+    }
+}
+
